@@ -1,0 +1,249 @@
+question,context,ground_truth,metadata
+What are the advantages of retrieval-augmented text generation compared to conventional generation models?,"A Survey on Retrieval-Augmented Text Generation
+Huayang Li♥,∗
+Yixuan Su♠,∗
+Deng Cai♦,∗
+Yan Wang♣,∗
+Lemao Liu♣,∗
+♥Nara Institute of Science and Technology
+♠University of Cambridge
+♦The Chinese University of Hong Kong
+♣Tencent AI Lab
+li.huayang.lh6@is.naist.jp, ys484@cam.ac.uk
+thisisjcykcd@gmail.com, brandenwang@tencent.com
+lemaoliu@gmail.com
+Abstract
+Recently, retrieval-augmented text generation
+attracted increasing attention of the compu-
+tational linguistics community.
+Compared
+with conventional generation models, retrieval-
+augmented text generation has remarkable ad-
+vantages and particularly has achieved state-of-
+the-art performance in many NLP tasks. This
+paper aims to conduct a survey about retrieval-
+augmented text generation. It ﬁrstly highlights
+the generic paradigm of retrieval-augmented
+generation, and then it reviews notable ap-
+proaches according to different tasks including
+dialogue response generation, machine trans-
+lation, and other generation tasks. Finally, it",What are the advantages of retrieval-augmented text generation compared to conventional generation models?,
+What are the advantages of retrieval-augmented text generation compared to generation-based models?,"generation, and then it reviews notable ap-
+proaches according to different tasks including
+dialogue response generation, machine trans-
+lation, and other generation tasks. Finally, it
+points out some promising directions on top of
+recent methods to facilitate future research.
+1
+Introduction
+Retrieval-augmented text generation, as a new
+text generation paradigm that fuses emerging deep
+learning technology and traditional retrieval tech-
+nology, has achieved state-of-the-art (SOTA) per-
+formance in many NLP tasks and attracted the at-
+tention of the computational linguistics community
+(Weston et al., 2018; Dinan et al., 2018; Cai et al.,
+2021). Compared with generation-based counter-
+part, this new paradigm has some remarkable ad-
+vantages: 1) The knowledge is not necessary to be
+implicitly stored in model parameters, but is explic-
+itly acquired in a plug-and-play manner, leading
+to great scalibility; 2) Instead of generating from
+scratch, the paradigm generating text from some re-",What are the advantages of retrieval-augmented text generation compared to generation-based models?,
+What are the three key components of retrieval-augmented generation?,"itly acquired in a plug-and-play manner, leading
+to great scalibility; 2) Instead of generating from
+scratch, the paradigm generating text from some re-
+trieved human-written reference, which potentially
+alleviates the difﬁculty of text generation.
+This paper aims to review many representative
+approaches for retrieval-augmented text generation
+tasks including dialogue response generation (We-
+ston et al., 2018), machine translation (Gu et al.,
+2018) and others (Hashimoto et al., 2018). We
+∗All authors contributed equally.
+ﬁrstly present the generic paradigm of retrieval-
+augmented generation as well as three key com-
+ponents under this paradigm, which are retrieval
+sources, retrieval metrics and generation models.
+Then, we introduce notable methods about
+retrieval-augmented generation, which are orga-
+nized with respect to different tasks. Speciﬁcally,
+on the dialogue response generation task, exem-
+plar/template retrieval as an intermediate step has",What are the three key components of retrieval-augmented generation?,
+What are some notable approaches to retrieval-augmented text generation in the context of dialogue response generation?,"retrieval-augmented generation, which are orga-
+nized with respect to different tasks. Speciﬁcally,
+on the dialogue response generation task, exem-
+plar/template retrieval as an intermediate step has
+been shown beneﬁcial to informative response gen-
+eration (Weston et al., 2018; Wu et al., 2019; Cai
+et al., 2019a,b). In addition, there has been growing
+interest in knowledge-grounded generation explor-
+ing different forms of knowledge such as knowl-
+edge bases and external documents (Dinan et al.,
+2018; Zhou et al., 2018; Lian et al., 2019; Li et al.,
+2019; Qin et al., 2019; Wu et al., 2021; Zhang et al.,
+2021). On the machine translation task, we summa-
+rize the early work on how the retrieved sentences
+(called translation memory) are used to improve
+statistical machine translation (SMT) (Koehn et al.,
+2003) models (Simard and Isabelle, 2009; Koehn
+and Senellart, 2010) and in particular, we inten-
+sively highlight several popular methods to inte-",What are some notable approaches to retrieval-augmented text generation in the context of dialogue response generation?,
+What are the major components of the retrieval-augmented generation paradigm?,"statistical machine translation (SMT) (Koehn et al.,
+2003) models (Simard and Isabelle, 2009; Koehn
+and Senellart, 2010) and in particular, we inten-
+sively highlight several popular methods to inte-
+grating translation memory to NMT models (Gu
+et al., 2018; Zhang et al., 2018; Xu et al., 2020;
+He et al., 2021). We also review the applications
+of retrieval-augmented generation in other genera-
+tion tasks such as abstractive summarization (Peng
+et al., 2019), code generation (Hashimoto et al.,
+2018), paraphrase (Kazemnejad et al., 2020; Su
+et al., 2021b), and knowledge-intensive generation
+(Lewis et al., 2020b). Finally, we also point out
+some promising directions on retrieval-augmented
+generation to push forward the future research.
+2
+Retrieval-Augmented Paradigm
+In this section, we ﬁrst give a general formulation
+of retrieval-augmented text generation. Then, we
+discuss three major components of the retrieval-
+augmented generation paradigm, including the re-","The major components of the retrieval-augmented generation paradigm are the integration of translation memory to NMT models, the applications in various generation tasks such as abstractive summarization, code generation, paraphrase, and knowledge-intensive generation, and the formulation and discussion of the retrieval-augmented text generation paradigm.",
+What are the three major components of the retrieval-augmented generation paradigm?,"In this section, we ﬁrst give a general formulation
+of retrieval-augmented text generation. Then, we
+discuss three major components of the retrieval-
+augmented generation paradigm, including the re-
+arXiv:2202.01110v2  [cs.CL]  13 Feb 2022
+Input
+Sources 
+(Sec. 2.2):
+Training 
+Corpus
+External Data
+Unsupervised 
+Data
+Metrics
+(Sec. 2.3):
+Sparse-vector 
+Retrieval
+Dense-vector 
+Retrieval
+Task-specific 
+Retrieval
+Retrieval Memory
+Generation Model
+Sec. 4: Machine 
+Translation
+Sec. 5: Other 
+Tasks
+Data 
+Augmentation
+Attention 
+Mechanism
+Skeleton & 
+Templates
+Information Retrieval
+Tasks:
+Sec. 3: Dialogue 
+Generation
+Models 
+(Sec 2.4):
+Output
+Figure 1: The overview of this survey.
+trieval source, retrieval metric and integration meth-
+ods.
+2.1
+Formulation
+Most text generation tasks can be formulated as a
+mapping from input sequence x to output sequence
+y : y = f(x). For instance, x and y could be the
+dialogue history and the corresponding response","The three major components of the retrieval-augmented generation paradigm are sparse-vector retrieval, dense-vector retrieval, and task-specific retrieval.","{'Authors': 'Huayang Li, Yixuan Su, Deng Cai, Yan Wang, Lemao Liu', 'Published': '2022-02-13', 'Summary': 'Recently, retrieval-augmented text generation attracted increasing attention\nof the computational linguistics community. Compared with conventional\ngeneration models, retrieval-augmented text generation has remarkable\nadvantages and particularly has achieved state-of-the-art performance in many\nNLP tasks. This paper aims to conduct a survey about retrieval-augmented text\ngeneration. It firstly highlights the generic paradigm of retrieval-augmented\ngeneration, and then it reviews notable approaches according to different tasks\nincluding dialogue response generation, machine translation, and other\ngeneration tasks. Finally, it points out some important directions on top of\nrecent methods to facilitate future research.', 'Title': 'A Survey on Retrieval-Augmented Text Generation'}"
+What is the main idea behind retrieval-augmented generation?,"Most text generation tasks can be formulated as a
+mapping from input sequence x to output sequence
+y : y = f(x). For instance, x and y could be the
+dialogue history and the corresponding response
+for dialogue response generation, the text in the
+source language and the translation in the target
+language for machine translation, and so on.
+Recently, some researchers suggest to endow
+models the capability to access external memory
+via some information retrieval techniques, so that
+they can acquire more information in the generation
+process (Gu et al., 2018; Weston et al., 2018; Cai
+et al., 2019b). The retrieval-augmented generation
+can be further formulated as:
+y = f(x, z)
+(1)
+where z = {⟨xr, yr⟩} is a set of relevant instances
+retrieved from the original training set or external
+datasets. The main idea of this paradigm is that yr
+may beneﬁt the response generation, if xr (or yr)
+is similar (or relevant) to the input x. It is worth
+noting that xr = ∅ when unsupervised retrieval",What is the main idea behind retrieval-augmented generation?,
+What are the three categories of metrics that evaluate the relevance between text?,"may beneﬁt the response generation, if xr (or yr)
+is similar (or relevant) to the input x. It is worth
+noting that xr = ∅ when unsupervised retrieval
+sources are used. In general, the retrieval mem-
+ory can be retrieved from three kinds of sources:
+the training corpus, external datasets in the same
+format with the training corpus, and large-scale
+unsupervised corpus (§2.2). Metrics that evaluate
+the relevance between text are varied as well, in
+§2.3 we divided them into three categories: sparse-
+vector retrieval, dense-vector retrieval, and training-
+based retrieval. Finally, how to integrate the re-
+trieval memory to the generation model is also sig-
+niﬁcant, we also introduce some popular integra-
+tion approaches in §2.4.
+2.2
+Retrieval Sources
+Training Corpus
+Most previous studies search
+the external memory from its training corpus (Song
+et al., 2016; Gu et al., 2018; Weston et al., 2018).
+In the inference time, retrieved examples with high",What are the three categories of metrics that evaluate the relevance between text?,
+What is the main motivation behind storing knowledge in an explicit and accessible form in retrieval-augmented text generation?,"Most previous studies search
+the external memory from its training corpus (Song
+et al., 2016; Gu et al., 2018; Weston et al., 2018).
+In the inference time, retrieved examples with high
+relevant scores could be regarded as extra refer-
+ences and reduce model’s uncertainty in generation.
+The main motivation of those works is to to store
+knowledge not only in the model parameters but
+also in an explicit and accessible form, making the
+model be able to re-access it during inference.
+External Data
+Some researchers also propose to
+retrieval relevant samples from external datasets
+(Su et al., 2021c; Xiao et al., 2021). In these stud-
+ies, the retrieval pool is different with the training
+corpus, which can further provide additional infor-
+mation that are not contained in the training corpus.
+This is especially beneﬁcial for applications such
+as domain adaptation and knowledge update. For
+example, Khandelwal et al. (2020a); Zheng et al.
+(2021a) employ the in-domain dataset as the exter-",The main motivation behind storing knowledge in an explicit and accessible form in retrieval-augmented text generation is to reduce model's uncertainty in generation and allow the model to re-access the knowledge during inference.,
+What is the main idea behind the cross-lingual retriever proposed by Cai et al. (2021)?,"This is especially beneﬁcial for applications such
+as domain adaptation and knowledge update. For
+example, Khandelwal et al. (2020a); Zheng et al.
+(2021a) employ the in-domain dataset as the exter-
+nal memory to achieve fast domain adaptation for
+machine translation.
+Unsupervised Data
+One limitation for previous
+two sources is that the datasets have to be super-
+vised datasets consisting of aligned input-output
+pairs. For machine translation, Cai et al. (2021) pro-
+pose a cross-lingual retriever to directly retrieve tar-
+get sentence from unsupervised corpus (i.e., mono-
+lingual corpus in the target language). The main
+idea is aligning source-side sentences and the corre-
+sponding target-side translations in a dense vector
+space, i.e., aligning x and yr when xr is absent.
+As a result, the retriever directly connects the dots
+between the source-side input and target-side trans-
+lations, enabling monolingual data in the target
+language to be used alone as memories.
+2.3
+Retrieval Metrics","The main idea behind the cross-lingual retriever proposed by Cai et al. (2021) is aligning source-side sentences and the corresponding target-side translations in a dense vector space, enabling monolingual data in the target language to be used alone as memories.",

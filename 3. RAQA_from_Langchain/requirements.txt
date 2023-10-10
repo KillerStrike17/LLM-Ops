@@ -1,0 +1,16 @@
+requests 
+scrapy
+selenium
+numpy==1.25.2
+openai==0.27.8
+python-dotenv==1.0.0
+pandas
+scikit-learn
+ipykernel
+matplotlib
+plotly
+wandb
+chainlit
+pinecone-client[grpc]
+tiktoken
+langchain

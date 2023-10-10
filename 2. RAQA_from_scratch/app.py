@@ -80,7 +80,7 @@ async def on_chat_start():
 async def main(message:str):
     chain = cl.user_session.get("chain")
     output = chain.run_pipeline(message,raqa_prompt, user_prompt)
-    print(output)
+    # print(output)
     msg = cl.Message(content=f"{output}")
     # msg.prompt = output
     await msg.send()

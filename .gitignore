@@ -1,2 +1,7 @@
 1. Beyond_ChatGPT/.env
 2. RAQA_from_scratch/.env
+3. RAQA_from_Langchain/.env
+4. RAGAS/.env
+2. RAQA_from_scratch/wandb/*
+3. RAQA_from_Langchain/cache/*
+3. RAQA_from_Langchain/wandb/*
