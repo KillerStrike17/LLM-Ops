@@ -5,3 +5,5 @@
 2. RAQA_from_scratch/wandb/*
 3. RAQA_from_Langchain/cache/*
 3. RAQA_from_Langchain/wandb/*
+5. RAG_with_Langchain_and_AWS_OpenSource_Models/.env
+5. RAG_with_Langchain_and_AWS_OpenSource_Models/wandb/*

@@ -1,0 +1,9 @@
+langchain
+huggingface-hub
+chainlit
+requests
+arxiv
+pymupdf
+faiss-cpu
+sentence-transformers
+ragas
